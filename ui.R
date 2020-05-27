@@ -1,1 +1,2 @@
-print("ALAMAKOTA")
+print("lll")
+
