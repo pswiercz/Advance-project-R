@@ -1,8 +1,16 @@
 library(shiny)
 
 shinyUI(fluidPage(
-
+    
     titlePanel("Dashboard App"),
+    
+    navlistPanel(
+        tabPanel("Wykres 1",
+                 h3("Tu mozna dac jakis wykres")),
+        tabPanel("Wykres 2",
+                 h3("Tu mozna dac jakis wykres"))
+        ),
+    
     sidebarLayout(
         sidebarPanel(
             radioButtons(
@@ -13,18 +21,26 @@ shinyUI(fluidPage(
             )
         ),
         mainPanel(plotOutput("plt"))
-    ),
+        ),
+        sidebarLayout(
+            sidebarPanel(
+                checkboxGroupInput(
+                    inputId ='checkBx',
+                    label = "District Manager",
+                    choiceNames = (list("Name1", "Name2", 'Name3')),
+                    choiceValues = (list("Name1", "Name2", 'Name3'))
+                )
+            ),
+            mainPanel(plotOutput("plt2"))
+        ),
     sidebarLayout(
         sidebarPanel(
-            checkboxGroupInput(
-                inputId ='checkBx',
-                label = "District Manager",
-                choiceNames = (list("Name1", "Name2", 'Name3')),
-                choiceValues = (list("Name1", "Name2", 'Name3'))
-            )
+            sliderInput("slider", label = "Interval - np lata, miesiace itd", min = 1,
+                        max = 10, value = c(2,4), step = 0.5)
         ),
-        mainPanel(plotOutput("plt2"))
+        mainPanel(
+            plotOutput("sldplot")
+        )
     )
-)
-)
+))
 
