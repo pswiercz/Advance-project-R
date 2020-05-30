@@ -1,14 +1,23 @@
-library(tidyverse)
-library(shiny)
-
+library(ggplot2)
 #Here is place for data inputing
 data <- iris
 pie <- as.data.frame(iris$Species, iris$Sepal.Length)
-#I use iris as mock data
 
+
+current_path <- rstudioapi::getSourceEditorContext()$path
+setwd(strsplit(current_path, "/")[[1]][1:(length(strsplit(current_path, "/")[[1]])-2)] %>% paste(collapse="/"))
+
+time <- glimpse(read.delim('./data/Time.txt', header = TRUE, dec = "."))
+store <- glimpse(read.delim('./data/Store.txt', header = TRUE, dec = "."))
+sales <- glimpse(read.delim('./data/Sales.txt', header = TRUE, dec = "."))
+item <- glimpse(read.delim('./data/Item.txt', header = TRUE, dec = "."))
+district <- glimpse(read.delim('./data/District.txt', header = TRUE, dec = "."))
+print(getwd())
 
 shinyServer(function(input, output) {
-    output$plt <- renderPlot({
+    
+    output$plt <- renderPlot(
+        {
         if (input$rb == '2012') {
             ggplot(data) + aes_(iris$Sepal.Length, iris$Sepal.Width) + geom_point()
         }
@@ -26,16 +35,17 @@ shinyServer(function(input, output) {
     
     output$plt2 <- renderPlot({
         
-        
         ggplot(pie) +  aes(x = "", y = iris$Species) +
             geom_bar( stat = "identity", color = "white") +
             coord_polar("y", start = 0)
             
     })
+    
     data_filtered <- reactive({data %>%
             filter(
                 between(Sepal.Width, input$slider[1], input$slider[2])
             )
+        
     })
     output$sldplot <- renderPlot({
         data_filtered() %>%
@@ -46,4 +56,3 @@ shinyServer(function(input, output) {
     })
 
 })
-
