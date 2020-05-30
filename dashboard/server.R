@@ -1,21 +1,19 @@
 library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+source("data_manipulation.r")
+
 #Here is place for data inputing
 data <- iris
 pie <- as.data.frame(iris$Species, iris$Sepal.Length)
 
+# current_path <- rstudioapi::getSourceEditorContext()$path
+# setwd(strsplit(current_path, "/")[[1]][1:(length(strsplit(current_path, "/")[[1]])-2)] %>% paste(collapse="/"))
+# print(getwd())
 
-current_path <- rstudioapi::getSourceEditorContext()$path
-setwd(strsplit(current_path, "/")[[1]][1:(length(strsplit(current_path, "/")[[1]])-2)] %>% paste(collapse="/"))
-
-time <- glimpse(read.delim('./data/Time.txt', header = TRUE, dec = "."))
-store <- glimpse(read.delim('./data/Store.txt', header = TRUE, dec = "."))
-sales <- glimpse(read.delim('./data/Sales.txt', header = TRUE, dec = "."))
-item <- glimpse(read.delim('./data/Item.txt', header = TRUE, dec = "."))
-district <- glimpse(read.delim('./data/District.txt', header = TRUE, dec = "."))
-print(getwd())
 
 shinyServer(function(input, output) {
-    
     output$plt <- renderPlot(
         {
         if (input$rb == '2012') {
