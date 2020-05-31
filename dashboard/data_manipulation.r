@@ -22,21 +22,40 @@ list_of_chains <- unique(summarize(group_by(store, Chain), Chain))
 
 
 graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "090-Home")){
-  item_sales <- inner_join(sales, item, by='ItemID')
-  item_sales_time <- inner_join(sales, item, by='ItemID') %>% inner_join(time, by='ReportingPeriodID')
-  # colnames(item_sales_time)
-  item_sales_time <- select(item_sales_time, Year = FiscalYear, Month = Period, Category, Sum_Regular_Sales_Dollars)
-  temp <- summarize(group_by(filter(item_sales_time, Year == year, Category == categories), Category, Month), Revenue = sum(Sum_Regular_Sales_Dollars))
-  return (spread(temp, Category, Revenue, fill = 0))
+  item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
+                  inner_join(time, by='ReportingPeriodID') %>% 
+                  select(Year = FiscalYear, Month = Period, Category, Sum_Regular_Sales_Dollars)
+  # temp <- summarize(group_by(filter(item_sales_time, Year == year, Category == categories), Category, Month), Revenue = sum(Sum_Regular_Sales_Dollars))
   
-}
+  filter(item_sales_time, Year == year, Category == categories) %>% 
+                                      group_by(Category, Month) %>%
+            summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>%
+                            spread(Category, Revenue, fill = 0) -> result
+return (result)}
+
 # graph_5_categories_sales(2014, c("040-Juniors", "090-Home"))
 
-graph_top_bottom_5_manager_sales <- function(){}
-
-graph_present_last_years_sales <- function(){}
+graph_top_bottom_5_manager_sales <- function(year=2014, dm=c("Carlos Grilo", "Allan Guinot")){
+  
+  store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
+      select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
+  
+  filter(store_sales_time, Year == year, DM == dm) %>% 
+                                    group_by(Name) %>%
+summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) -> result
+  return(result)}
 
 graph_opened_shops_count <- function(year){
   temp <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No, Chain), no= n())
-  return (spread(temp, Chain, no, fill = 0))
-}
+  return (spread(temp, Chain, no, fill = 0))}
+
+table_margin_sales <- function(){
+  item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
+    inner_join(time, by='ReportingPeriodID') %>% 
+    select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, Sum_Regular_Sales_Units, Sum_GrossMarginAmount)
+
+  filter(item_sales_time, Year == 2014) %>% 
+    group_by(Month) %>%
+    summarize(Revenue = sum(Sum_Regular_Sales_Dollars), qt = sum(Sum_Regular_Sales_Units), avr=sum(Sum_Regular_Sales_Dollars)/sum(Sum_Regular_Sales_Units)) -> result
+  return(result)
+ }
