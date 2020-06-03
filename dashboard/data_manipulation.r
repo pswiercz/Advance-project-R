@@ -12,13 +12,13 @@ sales <- glimpse(read.delim('../data/Sales.txt', header = TRUE, dec = "."))
 item <- glimpse(read.delim('../data/Item.txt', header = TRUE, dec = "."))
 district <- glimpse(read.delim('../data/District.txt', header = TRUE, dec = "."))
 
-list_of_managers <- unique(summarize(group_by(store, DM), DM))
-list_of_item_category <- unique(summarize(group_by(item, Category), Category))
+list_of_managers <- unique(store$DM)
+list_of_item_category <- unique(item$Category)
 # jeżeli chcesz to mogę dodać 2 kolumnę z nazwami bez brzydkich prefixów
 
 list_of_years_available_sales <- c(2013, 2014)
-list_of_years_available_store_opening <- unique(summarize(group_by(store, Open.Year), Open.Year))
-list_of_chains <- unique(summarize(group_by(store, Chain), Chain))
+list_of_years_available_store_opening <- sort(unique(store$Open.Year))
+list_of_chains <- unique(store$Chain)
 
 
 graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "090-Home")){
@@ -35,7 +35,7 @@ return (result)}
 
 # graph_5_categories_sales(2014, c("040-Juniors", "090-Home"))
 
-graph_top_bottom_5_manager_sales <- function(year=2014, dm=c("Carlos Grilo", "Allan Guinot")){
+graph_top_bottom_5_manager_sales <- function(year=2014, dm=c("Carlos Grilo")){
   
   store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
       select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
