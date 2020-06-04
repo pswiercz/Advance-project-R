@@ -1,7 +1,7 @@
 library(dplyr)
 library(tidyr)
 print(getwd())
-# getwd()
+getwd()
 
 # current_path <- rstudioapi::getSourceEditorContext()$path
 # setwd(strsplit(current_path, "/")[[1]][1:(length(strsplit(current_path, "/")[[1]])-1)] %>% paste(collapse="/"))
@@ -12,7 +12,7 @@ sales <- glimpse(read.delim('../data/Sales.txt', header = TRUE, dec = "."))
 item <- glimpse(read.delim('../data/Item.txt', header = TRUE, dec = "."))
 district <- glimpse(read.delim('../data/District.txt', header = TRUE, dec = "."))
 
-list_of_managers <- unique(store$DM)
+list_of_managers <- as.data.frame(unique(store$DM))
 list_of_item_category <- unique(item$Category)
 # jeżeli chcesz to mogę dodać 2 kolumnę z nazwami bez brzydkich prefixów
 
@@ -35,15 +35,19 @@ return (result)}
 
 # graph_5_categories_sales(2014, c("040-Juniors", "090-Home"))
 
-graph_top_bottom_5_manager_sales <- function(year=2014, dm=c("Carlos Grilo")){
-  
+graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
   store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
-      select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
+                select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
   
-  filter(store_sales_time, Year == year, DM == dm) %>% 
-                                    group_by(Name) %>%
-summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) -> result
-  return(result)}
+  if (isTRUE(top)){  
+    selected_stores <-store_sales_time %>% group_by(Name, DM) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(desc(Revenue)) %>% head(count)
+  } else {  
+    selected_stores <-store_sales_time %>% group_by(Name, DM) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(Revenue) %>% head(count)
+  }
+
+  return(selected_stores)}
+
+# graph_top_bottom_shops_sales(top=FALSE, count=10)
 
 graph_opened_shops_count <- function(year){
   temp <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No, Chain), no= n())
