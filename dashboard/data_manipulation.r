@@ -40,9 +40,9 @@ graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
                 select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
   
   if (isTRUE(top)){  
-    selected_stores <-store_sales_time %>% group_by(Name, DM) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(desc(Revenue)) %>% head(count)
+    selected_stores <-store_sales_time %>% group_by(Name) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(desc(Revenue)) %>% head(count)
   } else {  
-    selected_stores <-store_sales_time %>% group_by(Name, DM) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(Revenue) %>% head(count)
+    selected_stores <-store_sales_time %>% group_by(Name) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(Revenue) %>% head(count)
   }
 
   return(selected_stores)}
@@ -52,6 +52,8 @@ graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
 graph_opened_shops_count <- function(year){
   temp <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No, Chain), no= n())
   return (spread(temp, Chain, no, fill = 0))}
+
+# graph_opened_shops_count(2011)
 
 table_margin_sales <- function(){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
