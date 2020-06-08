@@ -20,8 +20,7 @@ list_of_years_available_sales <- c(2013, 2014)
 list_of_years_available_store_opening <- sort(unique(store$Open.Year))
 list_of_chains <- unique(store$Chain)
 
-
-graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "090-Home")){
+graph_5_categories_sales <- function(year=2013, categories=c("040-Juniors", "010-Womens")){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
                   inner_join(time, by='ReportingPeriodID') %>% 
                   select(Year = FiscalYear, Month = Period, Category, Sum_Regular_Sales_Dollars)
@@ -34,7 +33,6 @@ graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "090
 return (result)}
 
 # graph_5_categories_sales(2014, c("040-Juniors", "090-Home"))
-
 graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
   store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
                 select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, DM, Name)
@@ -64,4 +62,4 @@ table_margin_sales <- function(){
     group_by(Month) %>%
     summarize(Revenue = sum(Sum_Regular_Sales_Dollars), qt = sum(Sum_Regular_Sales_Units), avr=sum(Sum_Regular_Sales_Dollars)/sum(Sum_Regular_Sales_Units)) -> result
   return(result)
- }
+}
