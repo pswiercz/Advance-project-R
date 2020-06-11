@@ -18,6 +18,11 @@ list_of_years_available_sales <- c(2013, 2014)
 list_of_years_available_store_opening <- sort(unique(store$Open.Year))
 list_of_chains <- unique(store$Chain)
 
+convert_month <- function(df){
+  mymonths <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+  
+  df$Month <- mymonths[ df$Month ]
+  return (df)}
 
 graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "010-Womens")){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
@@ -28,7 +33,10 @@ graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "010
                                       group_by(Category, Month) %>%
             summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>%
                             spread(Category, Revenue, fill = 0) -> result
+  result <- convert_month(result)
 return (result)}
+
+# graph_5_categories_sales()
 
 graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
   store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
@@ -39,14 +47,13 @@ graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
   } else {  
     selected_stores <-store_sales_time %>% group_by(Name) %>% summarize(Revenue = sum(Sum_Regular_Sales_Dollars)) %>% arrange(Revenue) %>% head(count)
   }
-
   return(selected_stores)}
+
 
 graph_opened_shops_count <- function(year){
   result <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No), no= n())
+  result <- convert_month(result)
   return (result)}
-
-# graph_opened_shops_count(2012)
 
 table_margin_sales <- function(year = 2014){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
@@ -56,6 +63,7 @@ table_margin_sales <- function(year = 2014){
   filter(item_sales_time, Year == year) %>% 
     group_by(Month) %>%
     summarize(Revenue = sum(Sum_Regular_Sales_Dollars), qt = sum(Sum_Regular_Sales_Units), avr=sum(Sum_Regular_Sales_Dollars)/sum(Sum_Regular_Sales_Units)) -> result
+  result <- convert_month(result)
   return(result)}
 
 # Alicja dla ciebie do callingu - selling_area_average_sale(input)
@@ -77,9 +85,8 @@ selling_area_average_sale <- function(bottom=30000, top=50000){
     monthly_revenue$'no stores' <- number_of_stores$x
     monthly_revenue$'average revenue per stores' <- monthly_revenue$'average revenue per stores' / monthly_revenue$'no stores'
     result <- monthly_revenue
-      
+    result <- convert_month(result)
   return(result)}
-# selling_area_average_sale()
 
 
 top_sales <- as.data.frame(graph_top_bottom_shops_sales())
