@@ -1,0 +1,16 @@
+Package: ProjectPackage
+Title: Opened Shops Count
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Lukasz",
+           family = "Marchel",
+           role = c("aut", "cre"),
+           email = "l.marchel@student.uw.edu.pl",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: The package contains one function which, after inputting a specific year, gathers information from our dataset on the number of shops opened every month of that year.  The number of shops opened is also divided by chain (there are two).    
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
