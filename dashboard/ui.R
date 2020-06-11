@@ -9,10 +9,10 @@ shinyUI(fluidPage(
     sidebarLayout(
         sidebarPanel(
             radioButtons(
-                inputId = "sales_by_year",
+                inputId = "Opened_shops",
                 label = "Choose year",
-                choiceNames = list('2013', '2014'),
-                choiceValues = list('2013', '2014')
+                choiceNames = list('2012', '2013', '2014'),
+                choiceValues = list('2012', '2013', '2014')
             )
         ),
         mainPanel(plotOutput('plt1'))
@@ -42,7 +42,7 @@ shinyUI(fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            sliderInput("slider", label = "Slide between January and August", min = 1,
+            sliderInput("slider", label = "Slide between area income", min = 1,
                         max = 7, value = c(2,4), step = 1)
         ),
         mainPanel(plotOutput("opened_shops"))

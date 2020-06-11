@@ -14,11 +14,6 @@ district <- glimpse(read.delim('../data/District.txt', header = TRUE, dec = ".")
 
 
 
-list_of_years_available_sales <- c(2013, 2014)
-list_of_years_available_store_opening <- sort(unique(store$Open.Year))
-list_of_chains <- unique(store$Chain)
-
-
 graph_5_categories_sales(2014, "090-Home")
 graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "010-Womens")){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
@@ -67,6 +62,8 @@ table_margin_sales <- function(year = 2014){
 }
 
 
+#data used in app:
+
 top_sales <- as.data.frame(graph_top_bottom_shops_sales())
 bottom_sales<- as.data.frame(graph_top_bottom_shops_sales(FALSE, 5))
 
@@ -79,7 +76,8 @@ Womens <- as.data.frame(graph_5_categories_sales(2014, "010-Womens"))
 Juniors <- as.data.frame(graph_5_categories_sales(2014, "040-Juniors"))
 Kids <- as.data.frame(graph_5_categories_sales(2014, "030-Kids"))
 
-open_shops <- graph_opened_shops_count(2014)
+open_shops_2014 <- as.data.frame(graph_opened_shops_count(2014))
+open_shops_2013 <- as.data.frame(graph_opened_shops_count(2013))
+open_shops_2012 <- as.data.frame(graph_opened_shops_count(2012))
 
-marigin_2014 <-
-marigin_2013
+
