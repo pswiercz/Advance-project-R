@@ -12,15 +12,15 @@ sales <- glimpse(read.delim('../data/Sales.txt', header = TRUE, dec = "."))
 item <- glimpse(read.delim('../data/Item.txt', header = TRUE, dec = "."))
 district <- glimpse(read.delim('../data/District.txt', header = TRUE, dec = "."))
 
-list_of_managers <- as.data.frame(unique(store$DM))
-list_of_item_category <- unique(item$Category)
-# jeżeli chcesz to mogę dodać 2 kolumnę z nazwami bez brzydkich prefixów
+
 
 list_of_years_available_sales <- c(2013, 2014)
 list_of_years_available_store_opening <- sort(unique(store$Open.Year))
 list_of_chains <- unique(store$Chain)
 
-graph_5_categories_sales <- function(year=2013, categories=c("040-Juniors", "010-Womens")){
+
+graph_5_categories_sales(2014, "090-Home")
+graph_5_categories_sales <- function(year=2014, categories=c("040-Juniors", "010-Womens")){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
                   inner_join(time, by='ReportingPeriodID') %>% 
                   select(Year = FiscalYear, Month = Period, Category, Sum_Regular_Sales_Dollars)
@@ -53,13 +53,33 @@ graph_opened_shops_count <- function(year){
 
 # graph_opened_shops_count(2011)
 
-table_margin_sales <- function(){
+table_margin_sales(2012)
+
+table_margin_sales <- function(year = 2014){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
     inner_join(time, by='ReportingPeriodID') %>% 
     select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, Sum_Regular_Sales_Units, Sum_GrossMarginAmount)
 
-  filter(item_sales_time, Year == 2014) %>% 
+  filter(item_sales_time, Year == year) %>% 
     group_by(Month) %>%
     summarize(Revenue = sum(Sum_Regular_Sales_Dollars), qt = sum(Sum_Regular_Sales_Units), avr=sum(Sum_Regular_Sales_Dollars)/sum(Sum_Regular_Sales_Units)) -> result
   return(result)
 }
+
+
+top_sales <- as.data.frame(graph_top_bottom_shops_sales())
+bottom_sales<- as.data.frame(graph_top_bottom_shops_sales(FALSE, 5))
+
+list_of_categories <- as.data.frame(unique(item$Category))
+
+home <-as.data.frame(graph_5_categories_sales(2014, "090-Home"))
+accessories <- as.data.frame(graph_5_categories_sales(2014, "080-Accessories"))
+Mens <- as.data.frame(graph_5_categories_sales(2014, "020-Mens"))
+Womens <- as.data.frame(graph_5_categories_sales(2014, "010-Womens"))
+Juniors <- as.data.frame(graph_5_categories_sales(2014, "040-Juniors"))
+Kids <- as.data.frame(graph_5_categories_sales(2014, "030-Kids"))
+
+open_shops <- graph_opened_shops_count(2014)
+
+marigin_2014 <-
+marigin_2013

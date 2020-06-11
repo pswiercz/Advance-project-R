@@ -30,24 +30,22 @@ shinyUI(fluidPage(
     sidebarLayout(
         sidebarPanel(
             selectInput(
-                inputId = "list_managers",
-                label = "Managers:",
-                choices = list_of_managers,
+                inputId = "categories",
+                label = "Choose catgory to display sales for 2014:",
+                choices = list_of_categories[c(1,4,13,14,15,16), ],
                 selected = ""
             )
         ),
-        mainPanel(textOutput("stores"))
+        mainPanel(plotOutput("cat_sales"))
     ),
     
     
     sidebarLayout(
         sidebarPanel(
-            sliderInput("slider", label = "Interval - np lata, miesiace itd", min = 1,
-                        max = 10, value = c(2,4), step = 0.5)
+            sliderInput("slider", label = "Slide between January and August", min = 1,
+                        max = 7, value = c(2,4), step = 1)
         ),
-        mainPanel(
-           
-        )
+        mainPanel(plotOutput("opened_shops"))
     )
 ))
 
