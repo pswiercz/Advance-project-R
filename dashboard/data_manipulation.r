@@ -59,18 +59,18 @@ table_margin_sales <- function(year = 2014){
   return(result)}
 
 # Alicja dla ciebie do callingu - selling_area_average_sale(input)
-selling_area_average_sale <- function(slider_data){
+selling_area_average_sale <- function(bottom=30000, top=50000){
   store_sales_time <- inner_join(sales, store, by='LocationID') %>% inner_join(time, by='ReportingPeriodID') %>% 
     select(Year = FiscalYear, Month = Period, Sum_Regular_Sales_Dollars, SellingAreaSize, StoreNumber )
   
-    filter(store_sales_time, between(SellingAreaSize, slider_data$slider[1], slider_data$slider[2])) %>% 
+    filter(store_sales_time, between(SellingAreaSize, bottom, top)) %>% 
     group_by(Month, StoreNumber) %>% 
     summarize('x' = n()) -> temp
     temp$store_temp <- 1
       group_by(temp, Month) %>% 
     summarize('x' = sum(store_temp)) -> number_of_stores
   
-    filter(store_sales_time, between(SellingAreaSize, slider_data$slider[1], slider_data$slider[2])) %>% 
+    filter(store_sales_time, between(SellingAreaSize, bottom, top)) %>% 
                         group_by(Month) %>% 
     summarize('average revenue per stores' = sum(Sum_Regular_Sales_Dollars)) -> monthly_revenue
     
@@ -79,7 +79,7 @@ selling_area_average_sale <- function(slider_data){
     result <- monthly_revenue
       
   return(result)}
-
+# selling_area_average_sale()
 
 
 top_sales <- as.data.frame(graph_top_bottom_shops_sales())
