@@ -43,10 +43,10 @@ graph_top_bottom_shops_sales <- function(top=TRUE, count=5){
   return(selected_stores)}
 
 graph_opened_shops_count <- function(year){
-  temp <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No, Chain), no= n())
-  return (spread(temp, Chain, no, fill = 0))}
+  result <- summarize(group_by(filter(store, Open.Year == year), Month = Open.Month.No), no= n())
+  return (result)}
 
-graph_opened_shops_count(2012)
+# graph_opened_shops_count(2012)
 
 table_margin_sales <- function(year = 2014){
   item_sales_time <- inner_join(sales, item, by='ItemID') %>% 
